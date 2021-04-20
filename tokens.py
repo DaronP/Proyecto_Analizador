@@ -46,9 +46,9 @@ for line in lines:
 
 new_file = open(name + ".py", 'w')
 
-new_file.write("import thomson\n")
-new_file.write("import subconjuntos\n")
-new_file.write("import libs\n")
+new_file.write("from thomson import *\n")
+new_file.write("from subconjuntos import *\n")
+new_file.write("from libs import *\n")
 new_file.write("\n")
 
 chrs = []
@@ -62,12 +62,12 @@ for char in characters:
 
         if "chr" in char_list[1] or "CHR" in char_list[1]:
             new_file.write(caracter + "\n")
-            new_file.write(char_list[0] + " = character(" + str(char_list[0]).lower() + ")"+ "\n")
+            new_file.write(char_list[0] + " = or_ing(" + str(char_list[0]).lower() + ")"+ "\n")
             chrs.append(char_list[1])
         
         else:
             new_file.write(caracter + "\n")
-            new_file.write(char_list[0] + " = character(" + str(char_list[0]) + ")"+ "\n")
+            new_file.write(char_list[0] + " = or_ing(" + str(char_list[0]) + ")"+ "\n")
             new_file.write("\n")
 new_file.write("\n")
 
@@ -94,8 +94,8 @@ for token in tokens:
 
     else:
         t = token.replace(".", "")
-        
-        t = t.replace("{", "+" + chr(34) + "((" + chr(34) + "+")
+        t = t.replace(" = ", " = " + chr(34) + "(" + chr(34) + "+")
+        t = t.replace("{", "+" + chr(34) + ")_((" + chr(34) + "+")
         t = t.replace("|", "+" + chr(34) + "|" + chr(34) + "+")
         t = t.replace("}", "+" + chr(34) + ")*)" + chr(34))
 
@@ -119,6 +119,17 @@ num_str = ""
 for i in num_kw:
     num_str += i
 new_file.write("num_kw = " + "[" + num_str + "]\n")
+new_file.write("\n")
+
+new_file.write("print(letter_kw)")
+
+new_file.write("\n")
+new_file.write("pos_fx, alfa = postfix(letter_kw) \n")
+new_file.write("\n")
+new_file.write("#Iniciando el AFN \n")
+new_file.write("trans_t, strt_end_t = thomson(pos_fx, alfa)\n")
+new_file.write("#Iniciando el AFD\n")
+new_file.write("trans_afd, strt_end_afd = subconjuntos(trans_t, strt_end_t)\n")
 new_file.write("\n")
 
 new_file.close()

@@ -1,5 +1,6 @@
-l = "wasd dsaw"
 
-d = l.split(" ")
+l = "asd"
 
-print(chr(34), chr(39))
+l = "w" + l[0:]
+
+print(l, "//////////////////")

@@ -1,5 +1,6 @@
 from graphviz import Digraph
 import os
+from operator import itemgetter
 
 EPSILON = 'ε'
 
@@ -219,3 +220,22 @@ def postfix(exp):
             cadenaF.append(l[i])
 
     return(cadenaF, alfabeto)
+
+def or_ing(char):
+    char_list = []
+
+    for i in char:
+        if i != char[-1]:
+            char_list.append(i)
+            char_list.append('|')
+        else:
+            char_list.append(i)
+    
+    char_str = ""
+
+    for i in char_list:
+        char_str += i
+    
+    return char_str
+
+    
