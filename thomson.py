@@ -12,7 +12,7 @@ def thomson(exp_posfix, alfa):
     prim = []
     
     for i in range(len(exp_posfix)):
-        if (ord(exp_posfix[i]) > 96 and ord(exp_posfix[i]) < 123) or exp_posfix[i] == '0' or exp_posfix[i] == '1' or exp_posfix[i] == EPSILON:
+        if exp_posfix[i] in alfa or exp_posfix[i] == EPSILON:
             nodos.append([num, exp_posfix[i], num + 1])
             pila_fin.append([num, num + 1])
             num += 2

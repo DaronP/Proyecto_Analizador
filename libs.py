@@ -2,6 +2,8 @@ from graphviz import Digraph
 import os
 from operator import itemgetter
 
+os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin'
+
 EPSILON = 'ε'
 
 def grafo(nodos, lim, name):
@@ -97,55 +99,56 @@ def move(trans, estado, symbol):
             mov.add(i)
         
         return mov
+
+def transition(nodo_inicial, char, trans):
+    if type(nodo_inicial) is not list:
+        nodo_inicial = [nodo_inicial]
+
+    flag = False
+    nodo_trans = []
     
-def simulacion(trans_S, cadena, strt_end_S, alfa, tipo = 1):
-    for item in cadena:
-        if item not in alfa:
-            print("no existe en alfabeto")
-            return 0
-
-    if tipo == 0:
-        move_list = []
-        for item in cadena:
-            for estado in trans_S:
-                move_item_T = move(trans_S, estado[0], item)
-                move_list.append(move_item_T)
-
-        #eliminando duplicados
-        for i in range(len(move_list) - 1, - 1, - 1):        
-            if not move_list[i]:
-                del(move_list[i])
-
-        ultimo_move = move(trans_S, move_list[-1], EPSILON)
+    for nodo in nodo_inicial:        
+        for t in trans:
+            if t[0] == nodo and t[1] == char:
+                nodo_trans.append(t)
         
-        for u in ultimo_move:
-            if u == strt_end_S[-1][-1]:
-                return 1
-            else:
-                return 0
+    if len(nodo_trans) > 0:
+        flag = True
 
-    else:
-        for item in cadena:
-            move_item_S = move(trans_S, strt_end_S[0][0], item)
+    return flag
+    
+def simulacion(trans_S, cadena, strt_end_S, alfa):
+
+    for char in cadena:
+        if char not in alfa:
+            return Catch_Error(0, cadena)
+        
+        else:
+            trans_char = transition(strt_end_S[0][0], char, trans_S)
             
-            if not move_item_S:
-                print("no tiene transicion")
-                return 0
+            if type(strt_end_S[0][0]) is not list:
+                nodo_inicial = [strt_end_S[0][0]]
 
-            list_s = list(move_item_S)
+            flag = False
+            nodo_trans = []
 
-            nodo_s = list_s[0]
+            for nodo in nodo_inicial:        
+                for t in trans_S:
+                    if t[0] == nodo and t[1] == char:
+                        nodo_trans.append(t)
+                
+            if len(nodo_trans) > 0:
+                flag = True
 
-        count_s = 0
+            return flag
 
-        for nodo in range(len(strt_end_S)):
-            if nodo_s == strt_end_S[nodo][1]:
-                count_s += 1
-
-        if count_s > 0:
-            return 1
+    
 
 def postfix(exp):
+
+    exp = exp[:0] + '(' + exp[0:]
+    exp = exp[:-1] + exp[-1] + ')'
+
     pila = []
     l = []
     alfabeto = []
@@ -156,7 +159,7 @@ def postfix(exp):
 
     for char in exp:
         #Leyendo letras del lenguaje
-        if (ord(char) > 96 and ord(char) < 123) or char ==EPSILON or char == '0' or char == '1':
+        if (ord(char) > 64 and ord(char) < 91) or (ord(char) > 96 and ord(char) < 123) or char ==EPSILON or char == '0' or char == '1' or char == '2' or char == '3' or char == '4' or char == '5' or char == '6' or char == '7' or char == '8' or char == '9':
             l.append(char)
             alfabeto.append(char)
         #Leyendo otros tokens
@@ -238,4 +241,94 @@ def or_ing(char):
     
     return char_str
 
+def Catch_Error(err, word = ""):
+    if err == 0:
+        print("ERROR: Token no existente: ", word)
+    if err == 1:
+        print("ERROR: New Line no existente")
+    if err == 2:
+        print("ERROR: Palabra no existente: ", word)
+
     
+def scanner(keywords, minimo, fname):
+    t_file = open(fname, "r")
+
+    t_list = []
+
+    for line in t_file:
+        t_list.append(line)
+
+    t_file.close()
+
+    for linea in t_list:
+        flag_fl = False
+        first_letter = ""
+        word = ""
+
+        for l in linea:
+            if flag_fl == False:
+                first_letter = l
+                flag_fl = True
+
+            if l == chr(32):
+                if word in keywords:
+                    print("Keyword: ", word)
+                    word = ""
+                    flag_fl = False
+
+                else:
+                    if first_letter in minimo[0][2]:
+                        flag_word = simulacion(minimo[0][0], word, minimo[0][1], minimo[0][2])
+
+                        if flag_word and word not in keywords:
+                            print("Token: ", word, " Type: ident")
+                            word = ""
+                        else:
+                            Catch_Error(0, word)
+
+                    elif first_letter in minimo[1][2]:
+                        flag_word = simulacion(minimo[1][0], word, minimo[1][1], minimo[0][2])
+
+                        if flag_word and word not in keywords:
+                            print("Token: ", word, " Type: number")
+                            word = ""
+                        else:
+                            Catch_Error(0, word)
+                    
+                    if first_letter not in minimo[0][2] and first_letter not in minimo[1][2]:
+                        Catch_Error(2, word=word)
+            
+            elif l == chr(10):
+                print("New Line")
+                if word in keywords:
+                    print("Keyword: ", word)
+                    word = ""
+                    flag_fl = False
+
+                else:
+                    if first_letter in minimo[0][2]:
+                        flag_word = simulacion(minimo[0][0], word, minimo[0][1], minimo[0][2])
+
+                        if flag_word and word not in keywords:
+                            print("Token: ", word, " Type: ident")
+                            word = ""
+                        else:
+                            Catch_Error(0, word)
+
+                    elif first_letter in minimo[1][2]:
+                        flag_word = simulacion(minimo[1][0], word, minimo[1][1], minimo[0][2])
+
+                        if flag_word and word not in keywords:
+                            print("Token: ", word, " Type: number")
+                            word = ""
+                        else:
+                            Catch_Error(0, word)
+                    
+                    if first_letter not in minimo[0][2] and first_letter not in minimo[1][2]:
+                        Catch_Error(2, word=word)
+            
+            else:
+                word += l
+            
+            
+

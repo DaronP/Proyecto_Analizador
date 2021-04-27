@@ -1,4 +1,5 @@
 from libs import *
+from tqdm import tqdm
 
 EPSILON = 'ε'
 #trans: lista de nodos; estados de transicion
@@ -52,7 +53,7 @@ def subconjuntos(trans, strt_end):
         estado += 1
 
     print("\nTabla de transicion ")
-    print(tabla_trans)
+    #print(tabla_trans)
 
     tabla_estados = []
     end = []
@@ -61,7 +62,6 @@ def subconjuntos(trans, strt_end):
     for tran in tabla_trans:
         if tran[0] in estados and tran[2] in estados:
             tabla_estados.append([chr(65 + estados.index(tran[0])), tran[1], chr(65 + estados.index(tran[2]))])
-    
     #Estados iniciales/finales
     lista_estados = []
 
@@ -77,34 +77,58 @@ def subconjuntos(trans, strt_end):
             estados_dict[item[0]] = [item[1]]
 
     #Calculando el minimo
+    print("calculando minimo")
     minimo = []
     keys = list(estados_dict.keys())
     vals = list(estados_dict.values())
     
-    for key in range(len(keys)):
-        for v in range(len(vals)):
-            if keys[key] not in vals[v]:
-                for key2 in range(len(keys)):
-                    if keys[key2] in vals[key]:
-                        key2 += 1
-                    else:
-                        for w in vals[v]:
-                            try:
-                                sym = tabla_estados[lista_estados.index([keys[key], w])][1]
-                                minimo.append([keys[key], sym, keys[key2]])
-                            except:
-                                continue
+#    for key in tqdm(range(len(keys))):
+#        for v in range(len(vals)):
+#            if keys[key] not in vals[v]:
+#                for key2 in range(len(keys)):
+#                    if keys[key2] in vals[key]:
+#                        key2 += 1
+#                    else:
+#                        for w in vals[v]:
+#                            try:
+#                                sym = tabla_estados[lista_estados.index([keys[key], w])][1]
+#                                m = [keys[key], sym, keys[key2]]
+#                                
+#                                minimo.append(m)
+#                            except:
+#                                continue
+
+    
+    for key in tqdm(range(len(keys))):
+        if keys[key] not in vals[:key]:
+            for key2 in vals[:key]:
+                for val in key2:
+                    if val in vals[key]:
+                        try:
+                            #print(keys[key])
+                            #print(lista_estados.index([keys[key], val]))
+                            sym = tabla_estados[lista_estados.index([keys[key], val])][1]
+                            minimo.append([keys[key], sym, val])
+                        except:
+                            continue
+
+    print("minimo calculado")
     
     #Eliminar duplicados
-    for i in range(len(minimo) - 1, - 1, - 1):        
-        if(minimo[i] in minimo[:i]):
-            del(minimo[i])
+    print("Eliminando duplicados")
+    minimoo = []
+    for i in tqdm(range(len(minimo))):        
+        if(minimo[i] in minimoo):
+            pass
+        else:
+            minimoo.append(minimo[i])
 
     min_end = []
     for item in minimo:
         min_end.append([item[0], item[2]])
 
-    return(tabla_estados, lista_estados, minimo, min_end)
+    print("retornando resultados...")
+    return(tabla_estados, lista_estados, minimoo, min_end)
 
     
 

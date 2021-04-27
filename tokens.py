@@ -95,9 +95,9 @@ for token in tokens:
     else:
         t = token.replace(".", "")
         t = t.replace(" = ", " = " + chr(34) + "(" + chr(34) + "+")
-        t = t.replace("{", "+" + chr(34) + ")_((" + chr(34) + "+")
+        t = t.replace("{", "+" + chr(34) + ")_(" + chr(34) + "+")
         t = t.replace("|", "+" + chr(34) + "|" + chr(34) + "+")
-        t = t.replace("}", "+" + chr(34) + ")*)" + chr(34))
+        t = t.replace("}", "+" + chr(34) + ")*" + chr(34))
 
         if " EXCEPT KEYWORDS" in t:
             t_l = t.split(" = ")
@@ -113,23 +113,30 @@ new_file.write("\n")
 letter_str = ""
 for i in letter_kw:
     letter_str += i
-new_file.write("letter_kw = " + "[" + letter_str + "]\n")
+new_file.write("letter_kw = " + letter_str + "\n")
 
 num_str = ""
 for i in num_kw:
     num_str += i
-new_file.write("num_kw = " + "[" + num_str + "]\n")
+new_file.write("num_kw = " + num_str + "\n")
 new_file.write("\n")
 
-new_file.write("print(letter_kw)")
+new_file.write("\n")
+new_file.write("pos_fx_tkn, alfa_tkn = postfix(letter_kw) \n")
+new_file.write("pos_fx_num, alfa_num = postfix(num_kw) \n")
+new_file.write("\n")
 
+new_file.write("#Iniciando los AFN \n")
+new_file.write("trans_t_tkn, strt_end_t_tkn = thomson(pos_fx_tkn, alfa_tkn)\n")
+new_file.write("trans_t_num, strt_end_t_num = thomson(pos_fx_num, alfa_num)\n")
+
+new_file.write("#Iniciando los AFD\n")
+new_file.write("trans_afd_tkn, strt_end_afd_tkn, minimo_tkn, minimo_strt_end_tkn = subconjuntos(trans_t_tkn, strt_end_t_tkn)\n")
+new_file.write("trans_afd_num, strt_end_afd_num, minimo_num, minimo_strt_end_num = subconjuntos(trans_t_num, strt_end_t_num)\n")
+new_file.write("minimo = [minimo_tkn, minimo_strt_end_tkn, alfa_tkn], [minimo_num, minimo_strt_end_num, alfa_num]\n")
 new_file.write("\n")
-new_file.write("pos_fx, alfa = postfix(letter_kw) \n")
-new_file.write("\n")
-new_file.write("#Iniciando el AFN \n")
-new_file.write("trans_t, strt_end_t = thomson(pos_fx, alfa)\n")
-new_file.write("#Iniciando el AFD\n")
-new_file.write("trans_afd, strt_end_afd = subconjuntos(trans_t, strt_end_t)\n")
-new_file.write("\n")
+
+new_file.write("n_f = input('Ingrese el nombre del archivo... ')\n")
+new_file.write("scanner(keywords, minimo, n_f)\n")
 
 new_file.close()
