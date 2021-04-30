@@ -4,26 +4,25 @@ from libs import *
 
 #CHARACTERS
 letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-letters = or_ing(letters)
+letters  = or_ing(letters )
 
 digits = "0123456789"
-digits = or_ing(digits)
+digits  = or_ing(digits )
 
 indent = chr(9)
-indent = or_ing(indent)
+indent  = or_ing(indent )
 space = chr(32)
-space = or_ing(space)
+space  = or_ing(space )
 eol = chr(10)
-eol = or_ing(eol)
+eol  = or_ing(eol )
 
 #KEYWORDS
-keywords =['while', 'for', 'if', 'switch', 'case']
+keywords =[' while', ' for', ' if', ' switch', ' case']
 #TOKENS
-ident = "("+letters+")_("+letters+"|"+digits+")*"
-number = "("+digits+")_("+digits+")*"
+ident = letters+")_("+letters+"|"+digits+")*"
+number = digits+")_("+digits+")*"
 
-letter_kw = ident
-num_kw = number
+letter_kw = ident 
 
 
 pos_fx_tkn, alfa_tkn = postfix(letter_kw) 

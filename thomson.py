@@ -1,6 +1,7 @@
 from operator import itemgetter
 from collections import Counter
 from libs import *
+from tqdm import tqdm
 
 EPSILON = 'ε'
 def thomson(exp_posfix, alfa):
@@ -11,7 +12,7 @@ def thomson(exp_posfix, alfa):
 
     prim = []
     
-    for i in range(len(exp_posfix)):
+    for i in tqdm(range(len(exp_posfix))):
         if exp_posfix[i] in alfa or exp_posfix[i] == EPSILON:
             nodos.append([num, exp_posfix[i], num + 1])
             pila_fin.append([num, num + 1])
@@ -101,12 +102,20 @@ def thomson(exp_posfix, alfa):
                                 li.append(l2)
                 li = sorted(li)
 
+                '''
                 for w in range(len(li) - 1, - 1, - 1):        
                     if(li[w] in li[:w]):
-                        del(li[w])
+                        del(li[w])'''
 
-                if nodos[0][0][-1][-1] != li[-2]:
-                    nodos[0][0].append([nodos[0][0][-1][-1], EPSILON, li[-2]])
+                lii = []
+                for w in range(len(li)):
+                    if li[w] in lii:
+                        pass
+                    else:
+                        lii.append(li[w])
+
+                if nodos[0][0][-1][-1] != lii[-2]:
+                    nodos[0][0].append([nodos[0][0][-1][-1], EPSILON, lii[-2]])
             except:
                 try:
                     #Si nodos tiene dos niveles
@@ -145,16 +154,24 @@ def thomson(exp_posfix, alfa):
                                         li.append(l)
                             li = sorted(li)
 
+                            '''
                             for w in range(len(li) - 1, - 1, - 1):        
                                 if(li[w] in li[:w]):
-                                    del(li[w])
+                                    del(li[w])'''
+
+                            lii = []
+                            for w in range(len(li)):
+                                if li[w] in lii:
+                                    pass
+                                else:
+                                    lii.append(li[w])
 
                             if exp_posfix[i - 1] not in alfa:
                                 if nodos[0][-1][-1] != nodos[-1][0][-1][0]:
                                     nodos[0][0].append([nodos[0][-1][-1], EPSILON, nodos[-1][0][-1][0]])
                             
-                            if nodos[-1][0][-1][-1] != li[-2]:
-                                nodos[0][0].append([nodos[-1][0][-1][-1], EPSILON, li[-2]])
+                            if nodos[-1][0][-1][-1] != lii[-2]:
+                                nodos[0][0].append([nodos[-1][0][-1][-1], EPSILON, lii[-2]])
                 except:
                     pass
 
@@ -168,13 +185,21 @@ def thomson(exp_posfix, alfa):
     respuesta = sorted(sacar_lista(nodos), key=itemgetter(0))
 
     #Eliminar duplicados
+    '''
     for i in range(len(respuesta) - 1, - 1, - 1):        
         if(respuesta[i] in respuesta[:i]):
-            del(respuesta[i])
+            del(respuesta[i])'''
+
+    wasd = []
+    for i in range(len(respuesta)):
+        if respuesta[i] in wasd:
+            pass
+        else:
+            wasd.append(respuesta[i])
 
     
 
-    return respuesta, pila_fin
+    return wasd, pila_fin
 
 
 

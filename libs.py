@@ -121,7 +121,7 @@ def simulacion(trans_S, cadena, strt_end_S, alfa):
 
     for char in cadena:
         if char not in alfa:
-            return Catch_Error(0, cadena)
+            return False
         
         else:
             trans_char = transition(strt_end_S[0][0], char, trans_S)
@@ -159,9 +159,11 @@ def postfix(exp):
 
     for char in exp:
         #Leyendo letras del lenguaje
-        if (ord(char) > 64 and ord(char) < 91) or (ord(char) > 96 and ord(char) < 123) or char ==EPSILON or char == '0' or char == '1' or char == '2' or char == '3' or char == '4' or char == '5' or char == '6' or char == '7' or char == '8' or char == '9':
+        if (ord(char) > 64 and ord(char) < 91) or (ord(char) > 96 and ord(char) < 123) or char ==EPSILON or char == '0' or char == '1' or char == '2' or char == '3' or char == '4' or char == '5' or char == '6' or char == '7' or char == '8' or char == '9' or char == "�" or char == chr(34) or char == "/" or char == "~" or char == "!" or char == "," or char == ";" or char == "-" or char == ":" or char == "&":
+
             l.append(char)
             alfabeto.append(char)
+
         #Leyendo otros tokens
         else:
             #Parentesis
@@ -222,6 +224,9 @@ def postfix(exp):
         elif l[i] != '+':
             cadenaF.append(l[i])
 
+    if ")" in cadenaF[-2]:
+        cadenaF.pop(-2)
+
     return(cadenaF, alfabeto)
 
 def or_ing(char):
@@ -243,11 +248,11 @@ def or_ing(char):
 
 def Catch_Error(err, word = ""):
     if err == 0:
-        print("ERROR: Token no existente: ", word)
+        print("ERROR 0: Token no existente: ", word)
     if err == 1:
-        print("ERROR: New Line no existente")
+        print("ERROR 1: New Line no existente")
     if err == 2:
-        print("ERROR: Palabra no existente: ", word)
+        print("ERROR 2: Palabra no existente: ", word)
 
     
 def scanner(keywords, minimo, fname):
@@ -255,10 +260,9 @@ def scanner(keywords, minimo, fname):
 
     t_list = []
 
+
     for line in t_file:
         t_list.append(line)
-
-    t_file.close()
 
     for linea in t_list:
         flag_fl = False
@@ -270,65 +274,80 @@ def scanner(keywords, minimo, fname):
                 first_letter = l
                 flag_fl = True
 
+            if l == ".":
+                l = ":"
+            if l == "+":
+                l = "~"
+
             if l == chr(32):
+                print("Blanc")
                 if word in keywords:
                     print("Keyword: ", word)
                     word = ""
+                    first_letter = ""
                     flag_fl = False
+                    pass
 
                 else:
-                    if first_letter in minimo[0][2]:
-                        flag_word = simulacion(minimo[0][0], word, minimo[0][1], minimo[0][2])
+                    flags = []
+                    for i in range(len(minimo)):
+                        flag_word = simulacion(minimo[i][0], word, minimo[i][1], minimo[i][2])
+                        flags.append(flag_word)
 
-                        if flag_word and word not in keywords:
-                            print("Token: ", word, " Type: ident")
-                            word = ""
-                        else:
-                            Catch_Error(0, word)
-
-                    elif first_letter in minimo[1][2]:
-                        flag_word = simulacion(minimo[1][0], word, minimo[1][1], minimo[0][2])
-
-                        if flag_word and word not in keywords:
-                            print("Token: ", word, " Type: number")
-                            word = ""
-                        else:
-                            Catch_Error(0, word)
-                    
-                    if first_letter not in minimo[0][2] and first_letter not in minimo[1][2]:
-                        Catch_Error(2, word=word)
+                    if True in flags and word not in keywords:
+                        if ":" in word:
+                            word.replace(":", ".")
+                        if "~" in word:
+                            word.replace("~", "+")
+                        print("Token: ", word)
+                        word = ""
+                        first_letter = ""
+                        flag_fl = False
+                        break
+                    else:
+                        if word != "":
+                            Catch_Error(0, word)   
+                            word = ""    
+                            first_letter = ""  
+                            flag_fl = False
             
             elif l == chr(10):
                 print("New Line")
                 if word in keywords:
                     print("Keyword: ", word)
                     word = ""
+                    first_letter = ""
                     flag_fl = False
+                    pass
 
                 else:
-                    if first_letter in minimo[0][2]:
-                        flag_word = simulacion(minimo[0][0], word, minimo[0][1], minimo[0][2])
+                    flags = []
+                    for i in range(len(minimo)):
+                        flag_word = simulacion(minimo[i][0], word, minimo[i][1], minimo[i][2])
+                        flags.append(flag_word)
 
-                        if flag_word and word not in keywords:
-                            print("Token: ", word, " Type: ident")
-                            word = ""
-                        else:
-                            Catch_Error(0, word)
+                    if True in flags and word not in keywords:
+                        if ":" in word:
+                            word.replace(":", ".")
+                        if "~" in word:
+                            word.replace("~", "+")
+                        print("Token: ", word)
+                        word = ""
+                        first_letter = ""
+                        flag_fl = False
+                        break
+                    else:
+                        if word != "":
+                            Catch_Error(0, word)    
+                            word = "" 
+                            first_letter = ""   
+                            flag_fl = False
 
-                    elif first_letter in minimo[1][2]:
-                        flag_word = simulacion(minimo[1][0], word, minimo[1][1], minimo[0][2])
-
-                        if flag_word and word not in keywords:
-                            print("Token: ", word, " Type: number")
-                            word = ""
-                        else:
-                            Catch_Error(0, word)
-                    
-                    if first_letter not in minimo[0][2] and first_letter not in minimo[1][2]:
-                        Catch_Error(2, word=word)
             
             else:
                 word += l
+    
+    t_file.close()
             
             
 
