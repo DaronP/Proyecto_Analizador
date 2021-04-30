@@ -4,7 +4,7 @@
 
 #fn = input("Ingrese el nombre del archivo...")
 
-f = open("Aritmetica.ATG", "r")
+f = open("Double.ATG", "r")
 lines = []
 tokens = []
 keywords = []
@@ -272,6 +272,15 @@ for token in tokens:
                     t_l = t.split(" = ")
                     t = t_l[0] + " = " + chr(34) + "(" + chr(34) + "+" + t_l[1]
                     break
+            except:
+                pass
+        
+        for i in range(len(t)):
+            try:
+                if t[i - 2] == "*" and t[i - 1] == chr(34) and t[i] != "+" and "string" in t:
+                    t = t[:i] + "+" + chr(34) + "_" + chr(34) + "+" + chr(34) + "(" + chr(34) + "+" + t[i:] + "+" + chr(34) + ")" + chr(34)
+                    if "ss" in t:
+                        t = t.replace("ss", "s" + "+" + chr(34) + ")_(" + chr(34) + "+" + "s")
             except:
                 pass
 

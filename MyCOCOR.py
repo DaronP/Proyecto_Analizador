@@ -7,11 +7,9 @@ letter = "ABCDEFGHIJKLMN�OPQRSTUVWXYZabcdefghijklmn�opqrstuvwxyz"
 letter  = or_ing(letter )
 
 digit = "0123456789"
-digit  = or_ing(digit )
-
 cr = "!"
-lf = chr(10)
-tab = chr(9)
+lf = ";"
+tab = ","
 ignore = cr+lf+tab
 ignore  = or_ing(ignore )
 
@@ -21,9 +19,10 @@ operadores = "+-=()[]{}|.<>"
 keywords.append("+-=()[]{}|.<>")
 
 #TOKENS
+digit = or_ing(digit)
 ident = "("+letter+")_("+letter+"|"+digit+")*"
-string  = "("+comillas+"_"+stringletter+")_("+stringletter+")*"+"_"+comillas
-char = " (("+"/"+")*)_"+letter
+string  = "("+comillas+")_("+stringletter+")_("+stringletter+")*"+"_"+"("+comillas+")"
+char = " (("+"/"+")*)_("+letter
 charnumber  = "("+digit+")_("+digit+")*"
 startcode ="(."
 keywords.append(startcode)
@@ -39,11 +38,13 @@ pos_fx_char, alfa_char = postfix(char)
 pos_fx_charnumber, alfa_charnumber = postfix(charnumber) 
 
 #Iniciando los AFN 
+print("Iniciando los AFN")
 trans_t_ident, strt_end_t_ident = thomson(pos_fx_ident, alfa_ident)
 trans_t_string, strt_end_t_string = thomson(pos_fx_string, alfa_string)
 trans_t_char, strt_end_t_char = thomson(pos_fx_char, alfa_char)
 trans_t_charnumber, strt_end_t_charnumber = thomson(pos_fx_charnumber, alfa_charnumber)
 #Iniciando los AFD
+print("Iniciando los AFD")
 trans_afd_ident, strt_end_afd_ident, min_ident, min_strt_ident = subconjuntos(trans_t_ident, strt_end_t_ident)
 trans_afd_string, strt_end_afd_string, min_string, min_strt_string = subconjuntos(trans_t_string, strt_end_t_string)
 trans_afd_char, strt_end_afd_char, min_char, min_strt_char = subconjuntos(trans_t_char, strt_end_t_char)

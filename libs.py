@@ -100,7 +100,7 @@ def move(trans, estado, symbol):
         
         return mov
 
-def transition(nodo_inicial, char, trans):
+def movee(nodo_inicial, char, trans):
     if type(nodo_inicial) is not list:
         nodo_inicial = [nodo_inicial]
 
@@ -124,7 +124,7 @@ def simulacion(trans_S, cadena, strt_end_S, alfa):
             return False
         
         else:
-            trans_char = transition(strt_end_S[0][0], char, trans_S)
+            trans_char = movee(strt_end_S[0][0], char, trans_S)
             
             if type(strt_end_S[0][0]) is not list:
                 nodo_inicial = [strt_end_S[0][0]]
@@ -250,8 +250,6 @@ def Catch_Error(err, word = ""):
     if err == 0:
         print("ERROR 0: Token no existente: ", word)
     if err == 1:
-        print("ERROR 1: New Line no existente")
-    if err == 2:
         print("ERROR 2: Palabra no existente: ", word)
 
     
