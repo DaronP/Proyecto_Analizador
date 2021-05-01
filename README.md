@@ -1,5 +1,8 @@
 # Proyecto_Analizador
+Jorge Perez - 16362
 
-#Como correr el proyecto:
--Main: token.py (lector de CoCoL).
--Correr el archivo creado a partir de token.py.
+# Instrucciones:
+
+Compilacion: 
+  correr token.py - (main).
+  correr el archivo generado a partir del main.
