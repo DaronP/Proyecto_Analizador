@@ -5,4 +5,5 @@ Jorge Perez - 16362
 
 Compilacion: 
   correr token.py - (main).
+  
   correr el archivo generado a partir del main.
